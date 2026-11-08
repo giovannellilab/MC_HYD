@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.h3f
+*.h3i
+*.h3m
+*.h3p
+*.bwt
+*.sa
+results/
+*.log
+.env/
+.venv/
+.ipynb_checkpoints/
+.agents/
+.codex/
+.aws/
