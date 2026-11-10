@@ -93,9 +93,14 @@ def main():
             subprocess.run(['hmmpress', '-f', str(HMM)], check=True, stdout=subprocess.DEVNULL)
         raw = args.output / 'hmmscan.tbl'
         with (args.output / 'hmmscan.log').open('w') as log:
-            subprocess.run(['hmmscan', '--cpu', str(args.threads), '--noali', '-T', '400',
+            subprocess.run(['hmmscan', '--cpu', str(args.threads), '--noali',
                             '--tblout', str(raw), str(HMM), str(normalized)],
                            check=True, stdout=log, stderr=subprocess.STDOUT)
+        filtered = args.output / 'hmmscan.filtered.tbl'
+        with raw.open() as source, filtered.open('w') as dest:
+            for line in source:
+                if line.startswith('#') or not line.strip() or float(line.split()[5]) >= 400:
+                    dest.write(line)    
         hits = parse_hits(raw, seen)
         counts = Counter((v[0], v[1]) for v in hits.values())
         with (args.output / 'hydrogenases.tsv').open('w', newline='') as handle:
